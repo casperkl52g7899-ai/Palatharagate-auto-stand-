@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #ffde59; font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .app-container { max-width: 420px; margin: 0 auto; background: #ffde59; min-height: 100vh; padding-bottom: 120px; position: relative; }
-        .round-box { background: white; border-radius: 20px; border: 2px solid #000; padding: 12px 20px; box-shadow: 4px 4px 0 #000; }
-        .fare-display { background: #000; color: #ffde59; padding: 15px; border-radius: 20px; text-align: center; font-size: 26px; font-weight: 900; margin: 15px 0; border: 2px solid #000; }
+        .app-container { max-width: 420px; margin: 0 auto; background: #ffde59; min-height: 100vh; padding-bottom: 120px; }
+        .round-box { background: white; border-radius: 20px; border: 2px solid #000; padding: 12px 18px; box-shadow: 4px 4px 0 #000; }
+        .fare-display { background: #000; color: #ffde59; padding: 15px; border-radius: 20px; text-align: center; font-size: 28px; font-weight: 900; margin: 15px 0; border: 2px solid #000; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 420px; margin: 0 auto; background: white; border-radius: 30px 30px 0 0; padding: 15px; display: flex; justify-content: space-around; border-top: 4px solid #000; z-index: 50; }
-        .emergency-btn { background: white; border: 2px solid #000; border-radius: 15px; padding: 10px; font-size: 10px; font-weight: 900; box-shadow: 3px 3px 0 #000; display: flex; flex-direction: column; align-items: center; flex: 1; }
     </style>
 </head>
 <body>
@@ -20,21 +19,21 @@
 <div class="app-container">
     <div class="p-8 text-black text-center">
         <h1 class="text-3xl font-black italic uppercase leading-tight">പാലത്തറ ഗേറ്റ് <br> ഓട്ടോ സ്റ്റാൻഡ്</h1>
-        <div class="mt-2 text-[10px] font-bold tracking-[3px] uppercase opacity-70">Your Trusted Ride Partner</div>
+        <div class="mt-2 text-[10px] font-bold tracking-[3px] uppercase opacity-70">RELIABLE RIDE PARTNER</div>
     </div>
 
     <div class="px-6 space-y-5">
         
         <div class="space-y-3">
             <div class="round-box flex items-center space-x-3">
-                <i class="fas fa-user text-gray-400"></i>
+                <i class="fas fa-user text-blue-500"></i>
                 <input type="text" id="custName" placeholder="നിങ്ങളുടെ പേര്" class="w-full outline-none font-bold">
             </div>
             
             <div class="round-box flex items-center space-x-3">
                 <i class="fas fa-location-arrow text-green-500"></i>
                 <input type="text" id="fromLoc" placeholder="നിന്ന് (From)" class="w-full outline-none font-bold">
-                <button onclick="getLocation()"><i class="fas fa-crosshairs text-blue-500 text-xl"></i></button>
+                <button onclick="getLocation()" title="നിലവിലെ ലൊക്കേഷൻ"><i class="fas fa-crosshairs text-blue-600 text-xl"></i></button>
             </div>
 
             <div class="round-box flex items-center space-x-3">
@@ -43,14 +42,16 @@
             </div>
         </div>
 
-        <button onclick="checkDistance()" class="w-full bg-blue-600 text-white py-2 rounded-xl font-bold text-xs border-2 border-black shadow-[3px_3px_0_#000]">
-            📍 ദൂരം ഗൂഗിൾ മാപ്പിൽ നോക്കാം
+        <button onclick="checkDistance()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black text-sm border-2 border-black shadow-[4px_4px_0_#000] active:scale-95">
+            📍 മാപ്പിൽ ദൂരം പരിശോധിക്കുക
         </button>
+
+        <p class="text-[10px] text-center font-bold text-gray-700">മാപ്പിൽ കാണുന്ന ദൂരം താഴെ നൽകുക 👇</p>
 
         <div class="grid grid-cols-2 gap-4">
             <div class="round-box">
                 <p class="text-[9px] font-black uppercase mb-1">ദൂരം (KM)</p>
-                <input type="number" id="kmInput" step="0.1" oninput="calculateFare()" placeholder="0.0" class="w-full outline-none font-black text-lg">
+                <input type="number" id="kmInput" step="0.1" oninput="calculateFare()" placeholder="0.0" class="w-full outline-none font-black text-xl text-blue-700">
             </div>
             <div class="round-box">
                 <p class="text-[9px] font-black uppercase mb-1">സമയം</p>
@@ -63,8 +64,8 @@
                 <p class="text-[9px] font-black uppercase mb-1">ഡ്രൈവറെ തിരഞ്ഞെടുക്കുക</p>
                 <select id="driverSelect" class="w-full outline-none font-bold bg-transparent">
                     <option value="CASPER (8129377047)">CASPER</option>
-                    <option value="PRASAD (9847XXXXXX)">PRASAD</option>
-                    <option value="SULFI (9847XXXXXX)">SULFI</option>
+                    <option value="PRASAD (9847123456)">PRASAD</option>
+                    <option value="SULFI (9847654321)">SULFI</option>
                 </select>
             </div>
             <button onclick="callDriver()" class="bg-green-500 p-4 rounded-2xl border-2 border-black shadow-[4px_4px_0_#000]">
@@ -74,31 +75,15 @@
 
         <div id="fareDisplay" class="fare-display">ചാർജ്: ₹0</div>
 
-        <button onclick="sendWhatsApp()" class="w-full bg-black text-[#ffde59] py-5 rounded-full font-black text-xl border-2 border-black shadow-[5px_5px_0_#444] active:scale-95 transition-all">
-            BOOK NOW (WhatsApp)
+        <button onclick="sendWhatsApp()" class="w-full bg-black text-[#ffde59] py-5 rounded-full font-black text-xl border-2 border-black shadow-[5px_5px_0_#333] active:scale-95 transition-all">
+            ബുക്കിംഗ് അയക്കാം (WhatsApp)
         </button>
-
-        <div class="pt-4">
-            <p class="text-[11px] font-black uppercase mb-3 ml-1">അടിയന്തര സേവനങ്ങൾ</p>
-            <div class="flex space-x-3">
-                <button onclick="window.location.href='tel:108'" class="emergency-btn">
-                    <i class="fas fa-ambulance text-red-600 text-xl mb-1"></i> ആംബുലൻസ്
-                </button>
-                <button onclick="window.location.href='tel:100'" class="emergency-btn">
-                    <i class="fas fa-police-box text-blue-700 text-xl mb-1"></i> പോലീസ്
-                </button>
-                <button onclick="window.location.href='tel:101'" class="emergency-btn">
-                    <i class="fas fa-fire-extinguisher text-orange-600 text-xl mb-1"></i> ഫയർ
-                </button>
-            </div>
-        </div>
     </div>
 
     <div class="bottom-nav">
         <div class="text-center"><i class="fas fa-home text-2xl mb-1"></i><p class="text-[9px] font-bold">ഹോം</p></div>
-        <div class="text-center opacity-40"><i class="fas fa-history text-2xl mb-1"></i><p class="text-[9px] font-bold">യാത്രകൾ</p></div>
-        <div class="text-center opacity-40" onclick="callDriver()"><i class="fas fa-phone-alt text-2xl mb-1"></i><p class="text-[9px] font-bold">വിളിക്കുക</p></div>
-        <div class="text-center opacity-40"><i class="fas fa-user text-2xl mb-1"></i><p class="text-[9px] font-bold">പ്രൊഫൈൽ</p></div>
+        <div class="text-center opacity-40" onclick="window.location.href='tel:8129377047'"><i class="fas fa-phone-alt text-2xl mb-1"></i><p class="text-[9px] font-bold">വിളിക്കുക</p></div>
+        <div class="text-center opacity-40"><i class="fas fa-ambulance text-2xl mb-1 text-red-600"></i><p class="text-[9px] font-bold">108</p></div>
     </div>
 </div>
 
@@ -109,10 +94,11 @@
         if (navigator.geolocation) {
             document.getElementById('fromLoc').value = "തിരയുന്നു...";
             navigator.geolocation.getCurrentPosition((pos) => {
+                // കൃത്യമായ ഗൂഗിൾ മാപ്പ് ലിങ്ക്
                 currentGeoLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
                 document.getElementById('fromLoc').value = "എന്റെ ലൊക്കേഷൻ ✅";
             }, () => {
-                alert("ലൊക്കേഷൻ എടുക്കാൻ സാധിച്ചില്ല.");
+                alert("GPS ഓൺ ആണെന്ന് ഉറപ്പുവരുത്തുക.");
                 document.getElementById('fromLoc').value = "";
             });
         }
@@ -121,15 +107,26 @@
     function checkDistance() {
         let from = document.getElementById('fromLoc').value;
         let to = document.getElementById('toLoc').value;
-        if (!to) { alert("എങ്ങോട്ടാണ് പോകേണ്ടതെന്ന് നൽകുക"); return; }
-        window.open(`https://www.google.com/maps/dir/${from}/${to}`, "_blank");
+        
+        if (!to) { 
+            alert("എങ്ങോട്ടാണ് പോകേണ്ടതെന്ന് ടൈപ്പ് ചെയ്യുക!"); 
+            return; 
+        }
+
+        let start = (from === "എന്റെ ലൊക്കേഷൻ ✅") ? "Current+Location" : encodeURIComponent(from);
+        let destination = encodeURIComponent(to);
+        
+        // ഗൂഗിൾ മാപ്പ് നാവിഗേഷൻ ലിങ്ക്
+        window.open(`https://www.google.com/maps/dir/${start}/${destination}`, "_blank");
     }
 
     function calculateFare() {
         let km = parseFloat(document.getElementById('kmInput').value);
         let fare = 0;
         if (km > 0) {
-            fare = km <= 1.5 ? 30 : km * 25;
+            // 1.5 KM വരെ 30 രൂപ, അതിനുശേഷം ഓരോ കിലോമീറ്ററിനും 25 രൂപ
+            fare = (km <= 1.5) ? 30 : (30 + (km - 1.5) * 25);
+            // 5 രൂപയിലേക്ക് റൗണ്ട് ചെയ്യാൻ
             let total = Math.ceil(fare / 5) * 5;
             document.getElementById('fareDisplay').innerText = "ചാർജ്: ₹" + total;
         } else {
@@ -152,7 +149,7 @@
         let time = document.getElementById('pickupTime').value;
         let driver = document.getElementById('driverSelect').value;
 
-        if(!name || !to || !time || !km) { alert("വിവരങ്ങൾ പൂർണ്ണമല്ല!"); return; }
+        if(!name || !to || !km) { alert("ദയവായി എല്ലാ വിവരങ്ങളും നൽകുക!"); return; }
 
         let msg = `*പുതിയ ഓട്ടോ ബുക്കിംഗ് (പാലത്തറ ഗേറ്റ്)*%0A%0A` +
                   `*കസ്റ്റമർ:* ${name}%0A` +
@@ -162,7 +159,7 @@
                   `*${fare}*%0A` +
                   `*സമയം:* ${time}%0A` +
                   `*ഡ്രൈവർ:* ${driver}%0A` +
-                  `*ലൈവ് ലൊക്കേഷൻ:* ${currentGeoLink}`;
+                  `*കസ്റ്റമർ ലൊക്കേഷൻ:* ${currentGeoLink}`;
         
         window.open(`https://wa.me/918129377047?text=${msg}`);
     }
