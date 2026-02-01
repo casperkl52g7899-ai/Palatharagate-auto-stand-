@@ -10,7 +10,7 @@
         body { background-color: #ffde59; font-family: 'Segoe UI', sans-serif; }
         .app-container { max-width: 420px; margin: 0 auto; background: #ffde59; min-height: 100vh; padding-bottom: 120px; }
         .round-box { background: white; border-radius: 20px; border: 2px solid #000; padding: 12px 18px; box-shadow: 4px 4px 0 #000; }
-        .fare-display { background: #000; color: #ffde59; padding: 15px; border-radius: 20px; text-align: center; font-size: 28px; font-weight: 900; margin: 15px 0; border: 2px solid #000; }
+        .fare-display { background: #000; color: #ffde59; padding: 15px; border-radius: 20px; text-align: center; font-size: 32px; font-weight: 900; margin: 15px 0; border: 2px solid #000; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 420px; margin: 0 auto; background: white; border-radius: 30px 30px 0 0; padding: 15px; display: flex; justify-content: space-around; border-top: 4px solid #000; z-index: 50; }
     </style>
 </head>
@@ -32,7 +32,7 @@
             <div class="round-box flex items-center space-x-3">
                 <i class="fas fa-location-arrow text-green-500"></i>
                 <input type="text" id="fromLoc" placeholder="നിന്ന് (From)" class="w-full outline-none font-bold">
-                <button onclick="getCurrentLocation()"><i class="fas fa-crosshairs text-blue-600 text-xl"></i></button>
+                <button onclick="getCurrentLocation()"><i class="fas fa-crosshairs text-blue-600 text-2xl"></i></button>
             </div>
 
             <div class="round-box flex items-center space-x-3">
@@ -42,11 +42,11 @@
         </div>
 
         <button onclick="checkDistance()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black text-sm border-2 border-black shadow-[4px_4px_0_#000]">
-            📍 ദൂരം മാപ്പിൽ പരിശോധിക്കുക
+            📍 മാപ്പിൽ ദൂരം നോക്കാം
         </button>
 
         <div class="grid grid-cols-2 gap-4">
-            <div class="round-box text-center">
+            <div class="round-box text-center border-blue-600">
                 <p class="text-[9px] font-black uppercase mb-1">ദൂരം (KM)</p>
                 <input type="number" id="kmInput" step="0.1" oninput="calculateFare()" placeholder="0.0" class="w-full text-center outline-none font-black text-xl text-blue-700">
             </div>
@@ -58,7 +58,7 @@
 
         <div class="flex space-x-3 items-center">
             <div class="round-box flex-1">
-                <p class="text-[9px] font-black uppercase mb-1">ഡ്രൈവറെ തിരഞ്ഞെടുക്കുക</p>
+                <p class="text-[9px] font-black uppercase mb-1">ഡ്രൈവർ</p>
                 <select id="driverSelect" class="w-full outline-none font-bold bg-transparent">
                     <option value="CASPER (8129377047)">CASPER</option>
                     <option value="PRASAD">PRASAD</option>
@@ -73,7 +73,7 @@
         <div id="fareDisplay" class="fare-display">ചാർജ്: ₹0</div>
 
         <button onclick="sendWhatsApp()" class="w-full bg-black text-[#ffde59] py-5 rounded-full font-black text-xl border-2 border-black shadow-[5px_5px_0_#333]">
-            വാട്സാപ്പിൽ ബുക്ക് ചെയ്യാം
+            ബുക്കിംഗ് അയക്കാം
         </button>
     </div>
 
@@ -85,45 +85,51 @@
 </div>
 
 <script>
-    let userLatLng = "";
+    let userCoords = null;
 
     function getCurrentLocation() {
         if (navigator.geolocation) {
-            document.getElementById('fromLoc').value = "ലോക്കേഷൻ എടുക്കുന്നു...";
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                const lat = pos.coords.latitude;
-                const lng = pos.coords.longitude;
-                userLatLng = `${lat},${lng}`;
-                
-                // ലൊക്കേഷൻ പേര് എടുക്കാൻ (Reverse Geocoding)
-                try {
-                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-                    const data = await response.json();
-                    document.getElementById('fromLoc').value = data.address.suburb || data.address.neighbourhood || data.address.village || "എന്റെ ലൊക്കേഷൻ";
-                } catch {
-                    document.getElementById('fromLoc').value = "എന്റെ ലൊക്കേഷൻ";
-                }
-            });
+            document.getElementById('fromLoc').value = "ലോക്കേഷൻ നോക്കുന്നു...";
+            navigator.geolocation.getCurrentPosition((pos) => {
+                userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                document.getElementById('fromLoc').value = "എന്റെ ലൊക്കേഷൻ ✅";
+            }, (err) => {
+                alert("GPS ഓൺ ചെയ്യുക");
+                document.getElementById('fromLoc').value = "";
+            }, { enableHighAccuracy: true });
         }
     }
 
     function checkDistance() {
-        let from = document.getElementById('fromLoc').value;
         let to = document.getElementById('toLoc').value;
         if (!to) { alert("എങ്ങോട്ട് പോകണമെന്ന് നൽകുക"); return; }
-        
-        let start = userLatLng ? userLatLng : encodeURIComponent(from);
-        let dest = encodeURIComponent(to);
-        window.open(`https://www.google.com/maps/dir/${start}/${dest}/`, "_blank");
+        let origin = userCoords ? `${userCoords.lat},${userCoords.lng}` : encodeURIComponent(document.getElementById('fromLoc').value);
+        window.open(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${encodeURIComponent(to)}&travelmode=driving`, "_blank");
     }
 
     function calculateFare() {
         let km = parseFloat(document.getElementById('kmInput').value);
         let fare = 0;
+        
         if (km > 0) {
-            fare = (km <= 1.5) ? 30 : (30 + (km - 1.5) * 25);
-            let total = Math.ceil(fare / 5) * 5;
-            document.getElementById('fareDisplay').innerText = "ചാർജ്: ₹" + total;
+            if (km <= 1.5) fare = 30;
+            else if (km <= 1.6) fare = 40;
+            else if (km <= 2.0) fare = 50;
+            else if (km <= 2.5) fare = 60;
+            else if (km <= 2.75) fare = 70;
+            else if (km <= 3.0) fare = 80;
+            else if (km <= 3.5) fare = 90;
+            else if (km <= 3.75) fare = 100;
+            else if (km <= 4.0) fare = 100;
+            else if (km <= 4.5) fare = 110;
+            else if (km <= 4.75) fare = 120;
+            else if (km <= 5.0) fare = 130;
+            else {
+                // 5 KM ന് ശേഷം ഓരോ KM നും 25 രൂപ വച്ച്
+                fare = 130 + (km - 5) * 25;
+            }
+            
+            document.getElementById('fareDisplay').innerText = "ചാർജ്: ₹" + Math.ceil(fare);
         } else {
             document.getElementById('fareDisplay').innerText = "ചാർജ്: ₹0";
         }
@@ -135,22 +141,13 @@
         let to = document.getElementById('toLoc').value;
         let km = document.getElementById('kmInput').value;
         let fare = document.getElementById('fareDisplay').innerText;
-        let time = document.getElementById('pickupTime').value;
         let driver = document.getElementById('driverSelect').value;
 
-        if(!name || !to || !km) { alert("എല്ലാ വിവരങ്ങളും നൽകുക!"); return; }
+        if(!name || !to || !km) { alert("വിവരങ്ങൾ പൂർണ്ണമല്ല!"); return; }
 
-        let mapLink = userLatLng ? `https://www.google.com/maps?q=${userLatLng}` : "ലഭ്യമല്ല";
+        let mapLink = userCoords ? `https://www.google.com/maps?q=${userCoords.lat},${userCoords.lng}` : "Manual Entry";
 
-        let msg = `*പുതിയ ഓട്ടോ ബുക്കിംഗ് (പാലത്തറ ഗേറ്റ്)*%0A%0A` +
-                  `*പേര്:* ${name}%0A` +
-                  `*നിന്ന്:* ${from}%0A` +
-                  `*എങ്ങോട്ട്:* ${to}%0A` +
-                  `*ദൂരം:* ${km} KM%0A` +
-                  `*${fare}*%0A` +
-                  `*സമയം:* ${time}%0A` +
-                  `*ഡ്രൈവർ:* ${driver}%0A` +
-                  `*കസ്റ്റമർ ലൊക്കേഷൻ:* ${mapLink}`;
+        let msg = `*പുതിയ ഓട്ടോ ബുക്കിംഗ്*%0A%0A*പേര്:* ${name}%0A*നിന്ന്:* ${from}%0A*എങ്ങോട്ട്:* ${to}%0A*ദൂരം:* ${km} KM%0A*${fare}*%0A*ഡ്രൈവർ:* ${driver}%0A*ലൊക്കേഷൻ:* ${mapLink}`;
         
         window.open(`https://wa.me/918129377047?text=${msg}`);
     }
