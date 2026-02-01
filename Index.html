@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palathara Gate Auto Stand</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Auto Stand">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { 
+            background-color: #ffde59; 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .app-container { 
+            max-width: 420px; margin: 0 auto; flex: 1;
+            background: #ffde59;
+            position: relative; padding-bottom: 120px;
+        }
+        .italic-style { font-style: italic; letter-spacing: 1px; }
+        
+        .round-box {
+            background: white; border-radius: 50px;
+            border: 2px solid #000; padding: 12px 20px;
+            box-shadow: 4px 4px 0 #000; font-weight: bold;
+        }
+
+        .uniform-btn {
+            width: 100%; border-radius: 50px;
+            border: 2px solid #000; padding: 14px;
+            background: #fff; font-weight: 900;
+            box-shadow: 4px 4px 0 #000; appearance: none;
+            text-align: center;
+        }
+
+        .emergency-row {
+            display: flex; justify-content: space-between; gap: 10px;
+        }
+        .emergency-btn-small {
+            flex: 1; background: white; padding: 12px 5px; border-radius: 20px;
+            border: 2px solid #000; font-weight: 900; font-size: 10px;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            box-shadow: 3px 3px 0 #000;
+        }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; max-width: 420px; margin: 0 auto;
+            background: white; border-radius: 30px 30px 0 0; 
+            padding: 15px; display: flex; justify-content: space-around;
+            border-top: 4px solid #000; z-index: 50;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="p-8 text-black text-center">
+        <h1 class="text-3xl font-black italic-style uppercase leading-tight">പാലത്തറ ഗേറ്റ് <br> ഓട്ടോ സ്റ്റാൻഡ്</h1>
+        <div class="mt-2 text-[10px] font-bold tracking-[3px] uppercase opacity-70 italic-style">Your Trusted Ride Partner</div>
+    </div>
+
+    <div class="px-6 space-y-6">
+        <div class="space-y-4">
+            <div class="round-box flex items-center space-x-3">
+                <i class="fas fa-location-arrow text-green-500"></i>
+                <input type="text" id="fromLoc" placeholder="നിന്ന് (From)" class="w-full outline-none">
+                <button onclick="getLocation()"><i class="fas fa-crosshairs text-blue-500"></i></button>
+            </div>
+            <div class="round-box flex items-center space-x-3">
+                <i class="fas fa-map-marker-alt text-red-500"></i>
+                <input type="text" id="toLoc" placeholder="എങ്ങോട്ട് പോകണം? (To)" class="w-full outline-none">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="relative">
+                <p class="text-[10px] font-black uppercase mb-2 ml-2">ഡ്രൈവർ</p>
+                <select id="driverSelect" class="uniform-btn text-xs">
+                    <option value="PRASAD">PRASAD</option>
+                    <option value="CASPER">CASPER</option>
+                    <option value="SULFI">SULFI</option>
+                </select>
+            </div>
+            <div>
+                <p class="text-[10px] font-black uppercase mb-2 ml-2">സമയം</p>
+                <input type="time" id="tripTime" class="uniform-btn text-xs">
+            </div>
+        </div>
+
+        <button onclick="sendWhatsApp()" class="w-full bg-black text-[#ffde59] py-5 rounded-full font-black italic-style text-xl shadow-[6px_6px_0_#444] active:scale-95 transition-all">
+            ബുക്കിംഗ് അയക്കാം
+        </button>
+
+        <div class="pt-2">
+            <p class="text-[11px] font-black uppercase italic-style mb-4 text-black ml-2">Emergency Services</p>
+            <div class="emergency-row">
+                <button onclick="window.location.href='tel:108'" class="emergency-btn-small">
+                    <i class="fas fa-ambulance text-red-600 text-xl"></i>
+                    <span>ആംബുലൻസ്</span>
+                </button>
+                <button onclick="window.location.href='tel:100'" class="emergency-btn-small">
+                    <i class="fas fa-shield-alt text-blue-700 text-xl"></i>
+                    <span>പോലീസ്</span>
+                </button>
+                <button onclick="window.location.href='tel:101'" class="emergency-btn-small">
+                    <i class="fas fa-fire-extinguisher text-orange-600 text-xl"></i>
+                    <span>ഫയർ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav shadow-inner">
+        <div class="text-center"><i class="fas fa-home text-2xl mb-1"></i><p class="text-[9px] font-bold">ഹോം</p></div>
+        <div class="text-center opacity-40"><i class="fas fa-history text-2xl mb-1"></i><p class="text-[9px] font-bold">യാത്രകൾ</p></div>
+        <div class="text-center opacity-40" onclick="window.location.href='tel:8129377047'"><i class="fas fa-phone-alt text-2xl mb-1"></i><p class="text-[9px] font-bold">വിളിക്കുക</p></div>
+        <div class="text-center opacity-40"><i class="fas fa-user text-2xl mb-1"></i><p class="text-[9px] font-bold">പ്രൊഫൈൽ</p></div>
+    </div>
+</div>
+
+<script>
+    function getLocation() { 
+        document.getElementById('fromLoc').value = "നിലവിലെ ലൊക്കേഷൻ"; 
+    }
+    
+    function sendWhatsApp() {
+        let from = document.getElementById('fromLoc').value;
+        let to = document.getElementById('toLoc').value;
+        let time = document.getElementById('tripTime').value;
+        let driver = document.getElementById('driverSelect').value;
+        
+        if(!from || !to || !time) { 
+            alert("ദയവായി എല്ലാ വിവരങ്ങളും നൽകുക!"); 
+            return; 
+        }
+        
+        let msg = `*പുതിയ ഓട്ടോ ബുക്കിംഗ് (പാലത്തറ ഗേറ്റ്)*%0A%0A` +
+                  `*ഡ്രൈവർ:* ${driver}%0A` +
+                  `*സമയം:* ${time}%0A` +
+                  `*നിന്ന്:* ${from}%0A` +
+                  `*എങ്ങോട്ട്:* ${to}`;
+                  
+        window.open(`https://wa.me/918129377047?text=${msg}`);
+    }
+</script>
+
+</body>
+</html>
