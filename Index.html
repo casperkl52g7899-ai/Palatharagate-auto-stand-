@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palathara Gate Auto Stand</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #ffde59; font-family: 'Segoe UI', sans-serif; }
+        .app-container { max-width: 420px; margin: 0 auto; background: #ffde59; min-height: 100vh; padding-bottom: 120px; }
+        .round-box { background: white; border-radius: 20px; border: 2px solid #000; padding: 12px 18px; box-shadow: 4px 4px 0 #000; }
+        .fare-display { background: #000; color: #ffde59; padding: 15px; border-radius: 20px; text-align: center; font-size: 32px; font-weight: 900; margin: 15px 0; border: 2px solid #000; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 420px; margin: 0 auto; background: white; border-radius: 30px 30px 0 0; padding: 15px; display: flex; justify-content: space-around; border-top: 4px solid #000; z-index: 50; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="p-8 text-black text-center">
+        <h1 class="text-3xl font-black italic uppercase">പാലത്തറ ഗേറ്റ് <br> ഓട്ടോ സ്റ്റാൻഡ്</h1>
+        <div class="mt-2 text-[10px] font-bold tracking-[3px] opacity-70 italic">CASPER KL 52 G 7899</div>
+    </div>
+
+    <div class="px-6 space-y-5">
+        <div class="space-y-3">
+            <div class="round-box flex items-center space-x-3">
+                <i class="fas fa-user text-blue-500"></i>
+                <input type="text" id="custName" placeholder="നിങ്ങളുടെ പേര്" class="w-full outline-none font-bold">
+            </div>
+            
+            <div class="round-box flex items-center space-x-3">
+                <i class="fas fa-location-arrow text-green-500"></i>
+                <input type="text" id="fromLoc" placeholder="നിന്ന് (From)" class="w-full outline-none font-bold">
+                <button onclick="getCurrentLocation()"><i class="fas fa-crosshairs text-blue-600 text-2xl"></i></button>
+            </div>
+
+            <div class="round-box flex items-center space-x-3">
+                <i class="fas fa-map-marker-alt text-red-500"></i>
+                <input type="text" id="toLoc" placeholder="എങ്ങോട്ട് (To)" class="w-full outline-none font-bold">
+            </div>
+        </div>
+
+        <button onclick="checkDistance()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black text-sm border-2 border-black shadow-[4px_4px_0_#000]">
+            📍 മാപ്പിൽ ദൂരം നോക്കാം
+        </button>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="round-box text-center border-blue-600">
+                <p class="text-[9px] font-black uppercase mb-1">ദൂരം (KM)</p>
+                <input type="number" id="kmInput" step="0.1" oninput="calculateFare()" placeholder="0.0" class="w-full text-center outline-none font-black text-xl text-blue-700">
+            </div>
+            <div class="round-box text-center">
+                <p class="text-[9px] font-black uppercase mb-1">സമയം</p>
+                <input type="time" id="pickupTime" class="w-full outline-none font-bold text-center">
+            </div>
+        </div>
+
+        <div class="flex space-x-3 items-center">
+            <div class="round-box flex-1">
+                <p class="text-[9px] font-black uppercase mb-1">ഡ്രൈവർ</p>
+                <select id="driverSelect" class="w-full outline-none font-bold bg-transparent">
+                    <option value="CASPER (8129377047)">CASPER</option>
+                    <option value="PRASAD">PRASAD</option>
+                    <option value="SULFI">SULFI</option>
+                </select>
+            </div>
+            <button onclick="window.location.href='tel:8129377047'" class="bg-green-500 p-4 rounded-2xl border-2 border-black shadow-[4px_4px_0_#000]">
+                <i class="fas fa-phone-alt text-white text-xl"></i>
+            </button>
+        </div>
+
+        <div id="fareDisplay" class="fare-display">ചാർജ്: ₹0</div>
+
+        <button onclick="sendWhatsApp()" class="w-full bg-black text-[#ffde59] py-5 rounded-full font-black text-xl border-2 border-black shadow-[5px_5px_0_#333]">
+            ബുക്കിംഗ് അയക്കാം
+        </button>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="text-center"><i class="fas fa-home text-2xl"></i><p class="text-[9px] font-bold">ഹോം</p></div>
+        <div class="text-center opacity-40" onclick="window.location.href='tel:8129377047'"><i class="fas fa-phone-alt text-2xl"></i><p class="text-[9px] font-bold">വിളിക്കുക</p></div>
+        <div class="text-center opacity-40" onclick="window.location.href='tel:108'"><i class="fas fa-ambulance text-2xl text-red-600"></i><p class="text-[9px] font-bold">108</p></div>
+    </div>
+</div>
+
+<script>
+    let userCoords = null;
+
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            document.getElementById('fromLoc').value = "ലോക്കേഷൻ നോക്കുന്നു...";
+            navigator.geolocation.getCurrentPosition((pos) => {
+                userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                document.getElementById('fromLoc').value = "എന്റെ ലൊക്കേഷൻ ✅";
+            }, (err) => {
+                alert("GPS ഓൺ ചെയ്യുക");
+                document.getElementById('fromLoc').value = "";
+            }, { enableHighAccuracy: true });
+        }
+    }
+
+    function checkDistance() {
+        let to = document.getElementById('toLoc').value;
+        if (!to) { alert("എങ്ങോട്ട് പോകണമെന്ന് നൽകുക"); return; }
+        let origin = userCoords ? `${userCoords.lat},${userCoords.lng}` : encodeURIComponent(document.getElementById('fromLoc').value);
+        window.open(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${encodeURIComponent(to)}&travelmode=driving`, "_blank");
+    }
+
+    function calculateFare() {
+        let km = parseFloat(document.getElementById('kmInput').value);
+        let fare = 0;
+        
+        if (km > 0) {
+            if (km <= 1.5) fare = 30;
+            else if (km <= 1.6) fare = 40;
+            else if (km <= 2.0) fare = 50;
+            else if (km <= 2.5) fare = 60;
+            else if (km <= 2.75) fare = 70;
+            else if (km <= 3.0) fare = 80;
+            else if (km <= 3.5) fare = 90;
+            else if (km <= 3.75) fare = 100;
+            else if (km <= 4.0) fare = 100;
+            else if (km <= 4.5) fare = 110;
+            else if (km <= 4.75) fare = 120;
+            else if (km <= 5.0) fare = 130;
+            else {
+                // 5 KM ന് ശേഷം ഓരോ KM നും 25 രൂപ വച്ച്
+                fare = 130 + (km - 5) * 25;
+            }
+            
+            document.getElementById('fareDisplay').innerText = "ചാർജ്: ₹" + Math.ceil(fare);
+        } else {
+            document.getElementById('fareDisplay').innerText = "ചാർജ്: ₹0";
+        }
+    }
+
+    function sendWhatsApp() {
+        let name = document.getElementById('custName').value;
+        let from = document.getElementById('fromLoc').value;
+        let to = document.getElementById('toLoc').value;
+        let km = document.getElementById('kmInput').value;
+        let fare = document.getElementById('fareDisplay').innerText;
+        let driver = document.getElementById('driverSelect').value;
+
+        if(!name || !to || !km) { alert("വിവരങ്ങൾ പൂർണ്ണമല്ല!"); return; }
+
+        let mapLink = userCoords ? `https://www.google.com/maps?q=${userCoords.lat},${userCoords.lng}` : "Manual Entry";
+
+        let msg = `*പുതിയ ഓട്ടോ ബുക്കിംഗ്*%0A%0A*പേര്:* ${name}%0A*നിന്ന്:* ${from}%0A*എങ്ങോട്ട്:* ${to}%0A*ദൂരം:* ${km} KM%0A*${fare}*%0A*ഡ്രൈവർ:* ${driver}%0A*ലൊക്കേഷൻ:* ${mapLink}`;
+        
+        window.open(`https://wa.me/918129377047?text=${msg}`);
+    }
+</script>
+</body>
+</html>
