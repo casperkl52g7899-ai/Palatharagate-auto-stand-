@@ -3,194 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palathara Gate Auto Stand</title>
+    <title>Palathara Gate Auto Taxi Stand</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #ffde59; font-family: 'Segoe UI', sans-serif; }
-        .app-container { max-width: 420px; margin: 0 auto; background: #ffde59; min-height: 100vh; padding-bottom: 120px; }
-        .round-box { background: white; border-radius: 20px; border: 2px solid #000; padding: 12px 18px; box-shadow: 4px 4px 0 #000; }
-        .fare-display { background: #000; color: #ffde59; padding: 15px; border-radius: 20px; text-align: center; font-size: 32px; font-weight: 900; margin: 15px 0; border: 2px solid #000; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 420px; margin: 0 auto; background: white; border-radius: 30px 30px 0 0; padding: 15px; display: flex; justify-content: space-around; border-top: 4px solid #000; z-index: 50; }
-        #emergencyModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:italic,wght@0,700;1,400;1,700&display=swap');
+        
+        body { background-color: #ffde59; font-family: 'Poppins', sans-serif; color: #000; }
+        .app-container { max-width: 420px; margin: 0 auto; min-height: 100vh; padding-bottom: 110px; }
+        
+        /* ഹെഡർ ബോക്സ് */
+        .title-box {
+            background-color: #ffde59;
+            border: 5px solid #000;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 8px 8px 0 #000;
+            margin: 20px;
+        }
+
+        /* കളർഫുൾ ക്യാപ്ഷൻ */
+        .trusted-partner {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #000, #444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 2px solid #000;
+            display: inline-block;
+            padding-bottom: 2px;
+        }
+
+        /* ഡ്രൈവർ കാർഡ് */
+        .driver-card { 
+            background: #ffde59; 
+            border-radius: 25px; 
+            border: 3px solid #000; 
+            padding: 18px; 
+            margin: 0 15px 15px 15px; 
+            box-shadow: 6px 6px 0 #000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+
+        .driver-info p:first-child {
+            font-style: italic;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .driver-info p:last-child {
+            font-style: italic;
+            font-weight: 500;
+            color: #333;
+            letter-spacing: 1px;
+        }
+
+        /* ബോട്ടം മെനു */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 420px; 
+            margin: 0 auto; 
+            background: #111; 
+            border-radius: 35px 35px 0 0; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: space-around; 
+            border-top: 3px solid #000;
+            z-index: 50; 
+        }
+
+        .nav-item { text-align: center; text-decoration: none; transition: 0.3s; }
+        .nav-item i { font-size: 1.6rem; margin-bottom: 4px; display: block; }
+        
+        .nav-home { color: #4dabff; }    /* Bright Blue */
+        .nav-call { color: #2ecc71; }    /* Vibrant Green */
+        .nav-emergency { color: #ff4757; } /* Neon Red */
+
+        #emergencyModal { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 100; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="p-8 text-black text-center">
-        <h1 class="text-3xl font-black italic uppercase leading-tight">പാലത്തറ ഗേറ്റ് <br> ഓട്ടോ സ്റ്റാൻഡ്</h1>
-        <div class="mt-2 text-[10px] font-bold tracking-[3px] opacity-70 italic uppercase">Your Trusted Ride Partner</div>
+    <div class="text-center pt-6">
+        <div class="title-box">
+            <h1 class="text-3xl font-black italic uppercase leading-tight">
+                പാലത്തറ ഗേറ്റ് <br> ഓട്ടോ ടാക്സി സ്റ്റാൻഡ്
+            </h1>
+        </div>
+        <div class="mt-2">
+            <span class="trusted-partner text-lg">Your Trusted Ride Partner</span>
+        </div>
     </div>
 
-    <div class="px-6 space-y-5">
-        <div class="space-y-3">
-            <div class="round-box flex items-center space-x-3">
-                <i class="fas fa-user text-blue-500"></i>
-                <input type="text" id="custName" placeholder="നിങ്ങളുടെ പേര്" class="w-full outline-none font-bold">
-            </div>
-            
-            <div class="round-box flex items-center space-x-3">
-                <i class="fas fa-location-arrow text-green-500"></i>
-                <input type="text" id="fromLoc" placeholder="നിന്ന് (From)" class="w-full outline-none font-bold">
-                <button onclick="getCurrentLocation()"><i class="fas fa-crosshairs text-blue-600 text-2xl"></i></button>
-            </div>
-
-            <div class="round-box flex items-center space-x-3">
-                <i class="fas fa-map-marker-alt text-red-500"></i>
-                <input type="text" id="toLoc" placeholder="എങ്ങോട്ട് (To)" class="w-full outline-none font-bold">
-            </div>
-        </div>
-
-        <button onclick="checkDistance()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black text-sm border-2 border-black shadow-[4px_4px_0_#000]">
-            📍 മാപ്പിൽ ദൂരം നോക്കാം
-        </button>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div class="round-box text-center">
-                <p class="text-[9px] font-black uppercase mb-1">ദൂരം (KM)</p>
-                <input type="number" id="kmInput" step="0.1" oninput="calculateFare()" placeholder="0.0" class="w-full text-center outline-none font-black text-xl text-blue-700">
-            </div>
-            <div class="round-box text-center">
-                <p class="text-[9px] font-black uppercase mb-1">സമയം</p>
-                <input type="time" id="pickupTime" class="w-full outline-none font-bold text-center">
-            </div>
-        </div>
-
-        <div class="space-y-3">
-            <div class="round-box flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-taxi text-yellow-500"></i>
-                    <div>
-                        <p class="text-[10px] font-black uppercase text-gray-400">തിരഞ്ഞെടുത്ത ഡ്രൈവർ</p>
-                        <p class="font-black text-lg">ഹനീഫ (Casper)</p>
-                    </div>
-                </div>
-                <div class="flex space-x-2">
-                    <button onclick="saveContact()" class="bg-blue-100 p-3 rounded-xl border border-blue-500 text-blue-600" title="സേവ് ചെയ്യുക">
-                        <i class="fas fa-user-plus text-lg"></i>
-                    </button>
-                    <button onclick="callDriver()" class="bg-green-500 p-3 rounded-xl border-2 border-black shadow-[2px_2px_0_#000] text-white">
-                        <i class="fas fa-phone-alt text-lg"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="fareDisplay" class="fare-display">ചാർജ്: ₹0</div>
-
-        <button onclick="sendWhatsApp()" class="w-full bg-black text-[#ffde59] py-5 rounded-full font-black text-xl border-2 border-black shadow-[5px_5px_0_#333]">
-            വാട്സാപ്പിൽ ബുക്ക് ചെയ്യാം
-        </button>
+    <div class="px-6 mt-8 mb-4 flex items-center">
+        <div class="h-[2px] bg-black flex-grow"></div>
+        <p class="mx-3 text-xs font-black uppercase italic">ലഭ്യമായ ഡ്രൈവർമാർ 👇</p>
+        <div class="h-[2px] bg-black flex-grow"></div>
     </div>
+
+    <div id="driversList">
+        </div>
 
     <div id="emergencyModal" onclick="closeEmergency()">
-        <div class="bg-white p-6 rounded-3xl w-full max-w-xs space-y-4 border-4 border-red-600" onclick="event.stopPropagation()">
-            <h2 class="text-xl font-black text-center text-red-600 uppercase">Emergency Services</h2>
-            <button onclick="window.location.href='tel:108'" class="w-full flex items-center justify-between bg-red-50 p-4 rounded-xl border-2 border-red-600">
-                <div class="flex items-center space-x-3"><i class="fas fa-ambulance text-red-600 text-2xl"></i><span class="font-bold">Ambulance</span></div>
-                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">108</span>
+        <div class="bg-[#ffde59] p-8 rounded-[40px] w-full max-w-xs space-y-5 border-4 border-black shadow-[15px_15px_0_#ff4757]" onclick="event.stopPropagation()">
+            <h2 class="text-3xl font-black text-center italic border-b-4 border-black pb-3">അടിയന്തര സഹായം</h2>
+            <button onclick="window.location.href='tel:108'" class="w-full flex items-center justify-between bg-white p-5 rounded-2xl border-3 border-black font-black text-lg">
+                <span>AMBULANCE</span><i class="fas fa-ambulance text-red-600 text-3xl"></i>
             </button>
-            <button onclick="window.location.href='tel:100'" class="w-full flex items-center justify-between bg-blue-50 p-4 rounded-xl border-2 border-blue-600">
-                <div class="flex items-center space-x-3"><i class="fas fa-shield-alt text-blue-600 text-2xl"></i><span class="font-bold">Police</span></div>
-                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">100</span>
+            <button onclick="window.location.href='tel:100'" class="w-full flex items-center justify-between bg-white p-5 rounded-2xl border-3 border-black font-black text-lg">
+                <span>POLICE</span><i class="fas fa-shield-alt text-blue-600 text-3xl"></i>
             </button>
-            <button onclick="window.location.href='tel:101'" class="w-full flex items-center justify-between bg-orange-50 p-4 rounded-xl border-2 border-orange-600">
-                <div class="flex items-center space-x-3"><i class="fas fa-fire text-orange-600 text-2xl"></i><span class="font-bold">Fire Force</span></div>
-                <span class="bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold">101</span>
+            <button onclick="window.location.href='tel:101'" class="w-full flex items-center justify-between bg-white p-5 rounded-2xl border-3 border-black font-black text-lg">
+                <span>FIRE FORCE</span><i class="fas fa-fire text-orange-600 text-3xl"></i>
             </button>
-            <button onclick="closeEmergency()" class="w-full py-2 text-gray-400 font-bold uppercase text-[10px] tracking-widest">Tap to close</button>
+            <p class="text-center font-bold text-black animate-bounce mt-4">Close ✖</p>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="text-center" onclick="window.location.reload()"><i class="fas fa-home text-2xl"></i><p class="text-[9px] font-bold">ഹോം</p></div>
-        <div class="text-center opacity-40" onclick="callDriver()"><i class="fas fa-phone-alt text-2xl"></i><p class="text-[9px] font-bold">വിളിക്കുക</p></div>
-        <div class="text-center text-red-600" onclick="openEmergency()"><i class="fas fa-exclamation-triangle text-2xl animate-pulse"></i><p class="text-[9px] font-bold font-black uppercase">Emergency</p></div>
+        <div class="nav-item nav-home" onclick="window.location.reload()">
+            <i class="fas fa-house-chimney"></i>
+            <p class="text-[11px] font-black italic">ഹോം</p>
+        </div>
+        <div class="nav-item nav-call" onclick="window.location.href='tel:8129377047'">
+            <i class="fas fa-phone-volume animate-pulse"></i>
+            <p class="text-[11px] font-black italic">വിളിക്കുക</p>
+        </div>
+        <div class="nav-item nav-emergency" onclick="openEmergency()">
+            <i class="fas fa-biohazard"></i>
+            <p class="text-[11px] font-black italic">അപകടം</p>
+        </div>
     </div>
 </div>
 
 <script>
-    const DRIVER_NAME = "ഹനീഫ (Casper)";
-    const DRIVER_PHONE = "8129377047";
-    let userCoords = null;
+    const drivers = [
+        {name: "ഹനീഫ (Casper)", phone: "8129377047"},
+        {name: "ഉമ്മർ", phone: "9544257381"},
+        {name: "സുൽഫികർ", phone: "9895783735"},
+        {name: "അബ്ബാസ്", phone: "9744106864"},
+        {name: "വിജീഷ് (കാർത്തിക)", phone: "9946303174"},
+        {name: "റസാഖ്", phone: "9995113455"},
+        {name: "പ്രസാദ് (കരിന്തണ്ടൻ)", phone: "9961929035"},
+        {name: "മുത്തു (സഹൽ)", phone: "9846883806"},
+        {name: "കുഞ്ഞിപ്പ", phone: "9995337587"},
+        {name: "സിദ്ദിഖ്", phone: "9745967372"},
+        {name: "അബുടിക്ക", phone: "9745413184"},
+        {name: "രാജൻ (സീസൺ)", phone: "9539932008"},
+        {name: "അബ്ദുള്ള (ഹുബ്ബ്റസൂൽ)", phone: "8606409218"},
+        {name: "സുഭാഷ്", phone: "9846482524"},
+        {name: "വില്ലക്ക", phone: "7034082342"}
+    ];
+
+    const listDiv = document.getElementById('driversList');
+    drivers.forEach(d => {
+        listDiv.innerHTML += `
+            <div class="driver-card">
+                <div class="flex items-center space-x-4">
+                    <div class="text-3xl"><i class="fas fa-taxi"></i></div>
+                    <div class="driver-info">
+                        <p>${d.name}</p>
+                        <p>${d.phone}</p>
+                    </div>
+                </div>
+                <div class="flex space-x-3">
+                    <button onclick="saveVCard('${d.name}', '${d.phone}')" class="bg-black text-[#ffde59] p-3 rounded-full border-2 border-black">
+                        <i class="fas fa-user-plus text-lg"></i>
+                    </button>
+                    <a href="tel:${d.phone}" class="bg-green-600 text-white p-3 rounded-full border-2 border-black shadow-[3px_3px_0_#000]">
+                        <i class="fas fa-phone-alt text-lg"></i>
+                    </a>
+                </div>
+            </div>
+        `;
+    });
+
+    function saveVCard(name, phone) {
+        const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEND:VCARD`;
+        const blob = new Blob([vcard], { type: "text/vcard" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `${name}.vcf`; a.click();
+    }
 
     function openEmergency() { document.getElementById('emergencyModal').style.display = 'flex'; }
     function closeEmergency() { document.getElementById('emergencyModal').style.display = 'none'; }
-
-    function saveContact() {
-        const vcard = "BEGIN:VCARD\nVERSION:3.0\nFN:" + DRIVER_NAME + "\nTEL:" + DRIVER_PHONE + "\nEND:VCARD";
-        const blob = new Blob([vcard], { type: "text/vcard" });
-        const url = window.URL.createObjectURL(blob);
-        const newLink = document.createElement('a');
-        newLink.href = url;
-        newLink.setAttribute('download', DRIVER_NAME + ".vcf");
-        newLink.click();
-    }
-
-    function getCurrentLocation() {
-        if (navigator.geolocation) {
-            document.getElementById('fromLoc').value = "തിരയുന്നു...";
-            navigator.geolocation.getCurrentPosition((pos) => {
-                userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                document.getElementById('fromLoc').value = "എന്റെ ലൊക്കേഷൻ ✅";
-            }, (err) => { alert("GPS ഓൺ ചെയ്യുക"); document.getElementById('fromLoc').value = ""; }, { enableHighAccuracy: true });
-        }
-    }
-
-    function checkDistance() {
-        let to = document.getElementById('toLoc').value;
-        if (!to) { alert("എങ്ങോട്ട് പോകണമെന്ന് നൽകുക"); return; }
-        let origin = userCoords ? `${userCoords.lat},${userCoords.lng}` : encodeURIComponent(document.getElementById('fromLoc').value);
-        window.open(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${encodeURIComponent(to)}&travelmode=driving`, "_blank");
-    }
-
-    function calculateFare() {
-        let km = parseFloat(document.getElementById('kmInput').value);
-        let fare = 0;
-        if (km > 0) {
-            if (km <= 1.5) fare = 30;
-            else if (km <= 1.6) fare = 40;
-            else if (km <= 2.0) fare = 50;
-            else if (km <= 2.5) fare = 60;
-            else if (km <= 2.75) fare = 70;
-            else if (km <= 3.0) fare = 80;
-            else if (km <= 3.5) fare = 90;
-            else if (km <= 3.75) fare = 100;
-            else if (km <= 4.0) fare = 100;
-            else if (km <= 4.5) fare = 110;
-            else if (km <= 4.75) fare = 120;
-            else if (km <= 5.0) fare = 130;
-            else fare = 130 + (km - 5) * 25;
-            document.getElementById('fareDisplay').innerText = "ചാർജ്: ₹" + Math.ceil(fare);
-        } else { document.getElementById('fareDisplay').innerText = "ചാർജ്: ₹0"; }
-    }
-
-    function callDriver() { window.location.href = `tel:${DRIVER_PHONE}`; }
-
-    function sendWhatsApp() {
-        let name = document.getElementById('custName').value;
-        let from = document.getElementById('fromLoc').value;
-        let to = document.getElementById('toLoc').value;
-        let km = document.getElementById('kmInput').value;
-        let fare = document.getElementById('fareDisplay').innerText;
-        let time = document.getElementById('pickupTime').value;
-
-        if(!name || !to || !km) { alert("വിവരങ്ങൾ പൂർണ്ണമല്ല!"); return; }
-        let mapLink = userCoords ? `https://www.google.com/maps?q=${userCoords.lat},${userCoords.lng}` : "Manual Entry";
-        
-        let msg = `*പുതിയ ഓട്ടോ ബുക്കിംഗ് (പാലത്തറ ഗേറ്റ്)*%0A%0A` +
-                  `*കസ്റ്റമർ:* ${name}%0A` +
-                  `*നിന്ന്:* ${from}%0A` +
-                  `*എങ്ങോട്ട്:* ${to}%0A` +
-                  `*ദൂരം:* ${km} KM%0A` +
-                  `*സമയം:* ${time}%0A` +
-                  `*${fare}*%0A` +
-                  `*ഡ്രൈവർ:* ${DRIVER_NAME}%0A` +
-                  `*കസ്റ്റമർ ലൊക്കേഷൻ:* ${mapLink}`;
-        
-        window.open(`https://wa.me/91${DRIVER_PHONE}?text=${msg}`);
-    }
 </script>
+
 </body>
 </html>
